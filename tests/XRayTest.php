@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Equit\XRayTests;
 
 use BadMethodCallException;
@@ -28,10 +30,13 @@ class XRayTest extends TestCase
         $testObject = new class ($this->m_tracker, $this->m_baseTracker) extends TestBaseClass
         {
             private static CallTracker $m_tracker;
+
             private static string $m_privateStaticProperty = "private-static-property";
+
             public static string $publicStaticProperty = "public-static-property";
 
             private string $m_privateProperty = "private-property";
+
             public string $publicProperty = "public-property";
 
             private array $m_magicProperties = [

@@ -15,7 +15,6 @@ use ReflectionProperty;
 
 /**
  * @template T
- * @extends T
  *
  * Make visible the static inner workings of an object.
  *
@@ -139,7 +138,7 @@ class StaticXRay
     /**
      * Fetch the name of the class being x-rayed.
      *
-     * @return string The fully-qualified class name.
+     * @return class-string<T> The fully-qualified class name.
      */
     public function className(): string
     {

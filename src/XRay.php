@@ -13,7 +13,6 @@ use ReflectionProperty;
 
 /**
  * @template T
- * @extends T
  * Make visible the inner workings of an object.
  *
  * Provides an easy-to-use interface to use reflection to access the inner implementation details of objects. Use the
@@ -134,7 +133,7 @@ class XRay
     /**
      * Fetch the object being x-rayed.
      *
-     * @return object The subject of the x-ray.
+     * @return object<T> The subject of the x-ray.
      */
     public function subject(): object
     {

@@ -14,6 +14,7 @@ use ReflectionException;
 final class StaticXRayTest extends TestCase
 {
     public const StringArg = "hitch-hiker";
+
     public const IntArg = 42;
 
     private StaticXRay $m_xRay;
@@ -27,10 +28,13 @@ final class StaticXRayTest extends TestCase
         $testObject = new class ($this->m_tracker)
         {
             private static CallTracker $callTracker;
+
             private static string $privateStaticProperty = "private-static-property";
+
             public static string $publicStaticProperty = "public-static-property";
 
             private string $privateProperty = "private-property";
+
             public string $publicProperty = "public-property";
 
             public function __construct(CallTracker $tracker)
@@ -115,7 +119,7 @@ final class StaticXRayTest extends TestCase
             }
         };
 
-        $this->m_xRay = new StaticXRay(get_class($testObject));
+        $this->m_xRay = new StaticXRay($testObject::class);
     }
 
     public function testConstructorThrows(): void
