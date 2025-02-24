@@ -1,0 +1,31 @@
+{
+  "name": "xray/xray",
+  "description": "A PHP testing utility for accessing protected and private class members",
+  "minimum-stability": "stable",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Darren Edale",
+      "email": "packagist@equit.dev"
+    }
+  ],
+  "require": {
+    "php": "^8"
+  },
+  "require-dev": {
+    "mockery/mockery": "^1.5",
+    "phpunit/phpunit": "^9.5",
+    "squizlabs/php_codesniffer": "^3.7",
+    "vimeo/psalm": "^5.15"
+  },
+  "autoload": {
+    "psr-4": {
+      "XRay\\": "src"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "XRayTests\\": "tests"
+    }
+  }
+}

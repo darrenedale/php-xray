@@ -1,0 +1,38 @@
+name: xray-test
+
+services:
+  php80:
+    container_name: xray-test-80
+    image: darrenedale/equit:php-8.0-cli
+    volumes:
+      - ./:/xray
+    working_dir: /xray
+    stdin_open: true
+    tty: true
+
+  php81:
+    container_name: xray-test-81
+    image: darrenedale/equit:php-8.1-cli
+    volumes:
+      - ./:/xray
+    working_dir: /xray
+    stdin_open: true
+    tty: true
+
+  php82:
+    container_name: xray-test-82
+    image: darrenedale/equit:php-8.2-cli
+    volumes:
+      - ./:/xray
+    working_dir: /xray
+    stdin_open: true
+    tty: true
+
+  php83:
+    container_name: xray-test-83
+    image: darrenedale/equit:php-8.3-cli
+    volumes:
+      - ./:/xray
+    working_dir: /xray
+    stdin_open: true
+    tty: true

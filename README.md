@@ -2,8 +2,10 @@
 
 A PHP testing utility for accessing protected and private class members.
 
-Sometimes in tests you need to access protected or private class members. PHP provides a Reflection API for this. XRay provides a
-convenience layer on top of this to make it easier to use, and the code using it easier to understand.
+Sometimes in tests you need to access protected or private class members. PHP provides a Reflection API for this. XRay
+provides a convenience layer on top of this to make it easier to use, and the code using it easier to understand. The
+guiding principle is to attempt to make accessing inaccessible members the same as if the class were declared with those
+members `public`.
 
 It comes in two flavours, one for instance members, the other for static members. The principles of the two are the same:
 
@@ -197,6 +199,89 @@ $xray->staticArrayValue = $temporaryArray;
 
 While this is more verbose than the rest of the library, and doesn't align with the principle of "an XRay behaves the same as the object it
 xrays", it's still clearer and more concise than using PHP's Reflection API directly.
+
+## Inherited members
+
+XRays work with members that the xrayed object or class inherits from base classes, as well as its own members. This is
+regardless of how far back up the inheritance tree the target method is. The syntax for accessing inherited members is
+no different from how you access the object or class's own members:
+
+```php
+class BaseTestThis
+{
+    protected function doSomething(): void
+    {
+        // ... do something testable
+    }
+}
+
+class TestThis extends BaseTestThis
+{
+    protected function doSomethingElse(): void
+    {
+        // ... do something else testable
+    }
+}
+
+$xray = new XRay(new TestThis());
+$xray->doSomething();
+$xray->doSomethingElse();
+```
+
+If the object under test reimplements the inherited method, the reimplementation is the one that's called (just as it
+would be if it were a regular PHP method call):
+
+```php
+class BaseTestThis
+{
+    protected function doSomething(): void
+    {
+        // ... the xray does not call this method
+    }
+}
+
+class TestThis extends BaseTestThis
+{
+    protected function doSomething(): void
+    {
+        // ... this method gets called by the xray
+    }
+}
+
+$xray = new XRay(new TestThis());
+$xray->doSomething();
+```
+
+Inherited protected properties are supported too:
+
+```php
+class BaseTestThis
+{
+    protected string $baseValue;
+}
+
+class TestThis extends BaseTestThis
+{
+}
+
+$xray = new XRay(new TestThis());
+$xray->baseValue = "test-value";
+$theValue = $xray->baseValue;
+```
+
+### Base class private members
+
+`XRay` and `StaticXRay` will permit access to private properties of ancestors of the xrayed object or class. Such
+members are not inherited by the xrayed object/class itself, and therefore following the principle of _**as if the class
+were declared with `protected`/`private` members `public`**_, they ought not to be made visible in the xray. The reason
+they are visible is that the XRay applies the principle to the full inheritance hierarchy of the xrayed class/object.
+This facilitates setting test expectations when performing some operation on the object/class under test is expected to
+result in a state change in an ancestor class.
+
+This applies only to properties - `XRay`s and `StaticXRay`s don't make private methods of base classes accessible. This
+is because the main purpose of xraying is to enable testing of inaccessible members where necessary. Private methods are
+not inherited, and don't need testing with the inheriting class. Therefore there's no need for an xray to make it
+possible to invoke them.
 
 ## Public members
 
