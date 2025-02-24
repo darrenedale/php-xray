@@ -1,0 +1,45 @@
+name: PHP unit tests
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  run-tests:
+    name: Run unit tests
+    runs-on: ubuntu-22.04
+
+    strategy:
+      matrix:
+        php_version:
+          - "8.0"
+          - "8.1"
+          - "8.2"
+          - "8.3"
+
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@v4
+
+      - name: Install PHP ${{ matrix.php_version }} and extensions
+        run: |
+          sudo add-apt-repository -y ppa:ondrej/php
+          sudo apt-get update
+          sudo apt-get -y install php${{ matrix.php_version }}-cli php${{ matrix.php_version }}-curl php${{ matrix.php_version }}-dom php${{ matrix.php_version }}-mbstring php${{ matrix.php_version }}-uopz
+
+      - name: Select PHP ${{ matrix.php_version }}
+        run: sudo update-alternatives --set php /usr/bin/php${{ matrix.php_version }}
+
+      - name: Configure PHP ${{ matrix.php_version }} for development environment
+        run: sudo cp /usr/lib/php/${{ matrix.php_version }}/php.ini-development /etc/php/${{ matrix.php_version }}/cli/php.ini
+
+      - name: Install composer dependencies
+        run: |
+          rm composer.lock
+          rm -rf vendor
+          composer install
+
+      - name: Run unit tests
+        run: ./vendor/bin/phpunit --configuration ./test/phpunit.xml --do-not-cache-result ./tests
