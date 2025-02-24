@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace XRay;
+namespace Equit\XRay;
 
 use BadMethodCallException;
-use XRay\Exceptions\XRayException;
+use Equit\XRay\Exceptions\XRayException;
 use LogicException;
 use ReflectionClass;
 use ReflectionException;
@@ -14,6 +14,9 @@ use ReflectionObject;
 use ReflectionProperty;
 
 /**
+ * @template T
+ * @extends T
+ *
  * Make visible the static inner workings of an object.
  *
  * Provides an easy-to-use interface to use reflection to access the inner implementation details of objects. Use the
@@ -30,7 +33,7 @@ class StaticXRay
     /** @var ReflectionObject The ReflectionClass for the class being examined. */
     private ReflectionClass $m_subjectReflector;
 
-    /** @var string The fully-qualified name of the class being examined. */
+    /** @var class-string<T> The fully-qualified name of the class being examined. */
     private string $m_subjectClass;
 
     /** @var string[] Cache of resolved public static methods. */
@@ -56,7 +59,7 @@ class StaticXRay
     /**
      * Initialise a new static x-ray for a named class.
      *
-     * @param string $class The fully-qualified name of the class to x-ray.
+     * @param class-string<T> $class The fully-qualified name of the class to x-ray.
      *
      * @throws XRayException
      */

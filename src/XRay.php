@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace XRay;
+namespace Equit\XRay;
 
 use BadMethodCallException;
 use LogicException;
@@ -12,6 +12,8 @@ use ReflectionObject;
 use ReflectionProperty;
 
 /**
+ * @template T
+ * @extends T
  * Make visible the inner workings of an object.
  *
  * Provides an easy-to-use interface to use reflection to access the inner implementation details of objects. Use the
@@ -26,7 +28,7 @@ class XRay
     /** @var ReflectionObject The ReflectionObject for the object being examined. */
     private ReflectionObject $m_subjectReflector;
 
-    /** @var object The subject of the x-ray. */
+    /** @var object<T> The subject of the x-ray. */
     private object $m_subject;
 
     /** @var string[] Cache of resolved public methods. */
@@ -52,7 +54,7 @@ class XRay
     /**
      * Initialise a new x-ray for an object.
      *
-     * @param object $object The object to x-ray.
+     * @param object<T> $object The object to x-ray.
      */
     public function __construct(object $object)
     {

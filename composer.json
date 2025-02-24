@@ -1,5 +1,5 @@
 {
-  "name": "xray/xray",
+  "name": "equit/xray",
   "description": "A PHP testing utility for accessing protected and private class members",
   "minimum-stability": "stable",
   "license": "MIT",
@@ -20,12 +20,12 @@
   },
   "autoload": {
     "psr-4": {
-      "XRay\\": "src"
+      "Equit\\XRay\\": "src"
     }
   },
   "autoload-dev": {
     "psr-4": {
-      "XRayTests\\": "tests"
+      "Equit\\XRayTests\\": "tests"
     }
   }
 }

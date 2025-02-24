@@ -1,9 +1,9 @@
 <?php
 
-namespace XRayTests;
+namespace Equit\XRayTests;
 
 use BadMethodCallException;
-use XRay\XRay;
+use Equit\XRay\XRay;
 use LogicException;
 use PHPUnit\Framework\TestCase;
 use ReflectionException;

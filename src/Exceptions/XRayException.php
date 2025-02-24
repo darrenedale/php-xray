@@ -1,6 +1,6 @@
 <?php
 
-namespace XRay\Exceptions;
+namespace Equit\XRay\Exceptions;
 
 use RuntimeException;
 

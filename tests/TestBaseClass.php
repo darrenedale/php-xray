@@ -2,15 +2,13 @@
 
 declare(strict_types=1);
 
-namespace XRayTests;
+namespace Equit\XRayTests;
 
 use BadMethodCallException;
 use PHPUnit\Framework\TestCase;
 use LogicException;
 
-/**
- * Test base class for (Static)XRay tests to ensure they can access base class properties and methods.
- */
+/** Test base class for (Static)XRay tests to ensure they can access base class properties and methods. */
 class TestBaseClass
 {
     public const BaseStringArg = "base-method-arg";

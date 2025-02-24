@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace XRayTests;
+namespace Equit\XRayTests;
 
 use BadMethodCallException;
-use XRay\Exceptions\XRayException;
-use XRay\StaticXRay;
+use Equit\XRay\Exceptions\XRayException;
+use Equit\XRay\StaticXRay;
 use PHPUnit\Framework\TestCase;
 use LogicException;
 use ReflectionException;

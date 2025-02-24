@@ -1,6 +1,6 @@
 <?php
 
-namespace XRayTests;
+namespace Equit\XRayTests;
 
 /**
  * Class to facilitate tracking of method calls in test doubles.
