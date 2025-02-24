@@ -27,7 +27,7 @@ jobs:
         run: |
           sudo add-apt-repository -y ppa:ondrej/php
           sudo apt-get update
-          sudo apt-get -y install php${{ matrix.php_version }}-cli php${{ matrix.php_version }}-curl php${{ matrix.php_version }}-dom php${{ matrix.php_version }}-mbstring php${{ matrix.php_version }}-uopz
+          sudo apt-get -y install php${{ matrix.php_version }}-cli php${{ matrix.php_version }}-uopz
 
       - name: Select PHP ${{ matrix.php_version }}
         run: sudo update-alternatives --set php /usr/bin/php${{ matrix.php_version }}
@@ -42,4 +42,4 @@ jobs:
           composer install
 
       - name: Run unit tests
-        run: ./vendor/bin/phpunit --configuration ./test/phpunit.xml --do-not-cache-result ./tests
+        run: ./vendor/bin/phpunit --configuration ./phpunit.xml --do-not-cache-result ./tests
