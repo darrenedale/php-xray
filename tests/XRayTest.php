@@ -31,16 +31,16 @@ class XRayTest extends TestCase
         {
             private static CallTracker $m_tracker;
 
-            private static string $m_privateStaticProperty = "private-static-property";
+            private static string $privateStaticProperty = "private-static-property";
 
             public static string $publicStaticProperty = "public-static-property";
 
-            private string $m_privateProperty = "private-property";
+            private string $privateProperty = "private-property";
 
             public string $publicProperty = "public-property";
 
-            private array $m_magicProperties = [
-                "m_magicProperty" => "magic-property",
+            private array $magicProperties = [
+                "magicProperty" => "magic-property",
             ];
 
             public function __construct(CallTracker $tracker, CallTracker $baseTracker)
@@ -99,8 +99,8 @@ class XRayTest extends TestCase
 
             public function __get(string $property): string
             {
-                if ("m_magicProperty" === $property) {
-                    return $this->m_magicProperties[$property];
+                if ("magicProperty" === $property) {
+                    return $this->magicProperties[$property];
                 }
 
                 return parent::__get($property);
@@ -108,8 +108,8 @@ class XRayTest extends TestCase
 
             public function __set(string $property, string $value): void
             {
-                if ("m_magicProperty" === $property) {
-                    $this->m_magicProperties[$property] = $value;
+                if ("magicProperty" === $property) {
+                    $this->magicProperties[$property] = $value;
                     return;
                 }
 
@@ -179,9 +179,9 @@ class XRayTest extends TestCase
     /** Ensure we can access a private property defined on the class itself. */
     public function testXRayedProperty(): void
     {
-        self::assertFalse($this->m_xRay->isPublicProperty("m_privateProperty"));
-        self::assertTrue($this->m_xRay->isXRayedProperty("m_privateProperty"));
-        self::assertEquals("private-property", $this->m_xRay->m_privateProperty);
+        self::assertFalse($this->m_xRay->isPublicProperty("privateProperty"));
+        self::assertTrue($this->m_xRay->isXRayedProperty("privateProperty"));
+        self::assertEquals("private-property", $this->m_xRay->privateProperty);
     }
 
     /** Ensure we can access a private property on a base class. */
@@ -195,11 +195,11 @@ class XRayTest extends TestCase
     /** Ensure we can set a private property defined on the class itself. */
     public function testSetXRayedProperty(): void
     {
-        self::assertFalse($this->m_xRay->isPublicProperty("m_privateProperty"));
-        self::assertTrue($this->m_xRay->isXRayedProperty("m_privateProperty"));
-        self::assertEquals("private-property", $this->m_xRay->m_privateProperty);
-        $this->m_xRay->m_privateProperty = self::StringArg;
-        self::assertEquals(self::StringArg, $this->m_xRay->m_privateProperty);
+        self::assertFalse($this->m_xRay->isPublicProperty("privateProperty"));
+        self::assertTrue($this->m_xRay->isXRayedProperty("privateProperty"));
+        self::assertEquals("private-property", $this->m_xRay->privateProperty);
+        $this->m_xRay->privateProperty = self::StringArg;
+        self::assertEquals(self::StringArg, $this->m_xRay->privateProperty);
     }
 
     /** Ensure we can set a private property on a base class. */
@@ -215,9 +215,9 @@ class XRayTest extends TestCase
     /** Ensure we can access a magic property on the class itself. */
     public function testMagicProperty(): void
     {
-        self::assertFalse($this->m_xRay->isPublicProperty("m_magicProperty"));
-        self::assertFalse($this->m_xRay->isXRayedProperty("m_magicProperty"));
-        self::assertEquals("magic-property", $this->m_xRay->m_magicProperty);
+        self::assertFalse($this->m_xRay->isPublicProperty("magicProperty"));
+        self::assertFalse($this->m_xRay->isXRayedProperty("magicProperty"));
+        self::assertEquals("magic-property", $this->m_xRay->magicProperty);
     }
 
     /** Ensure we can access a magic property on a base class. */
@@ -231,11 +231,11 @@ class XRayTest extends TestCase
     /** Ensure we can set a magic property on the class itself. */
     public function testSetMagicProperty(): void
     {
-        self::assertFalse($this->m_xRay->isPublicProperty("m_magicProperty"));
-        self::assertFalse($this->m_xRay->isXRayedProperty("m_magicProperty"));
-        self::assertEquals("magic-property", $this->m_xRay->m_magicProperty);
-        $this->m_xRay->m_magicProperty = self::StringArg;
-        self::assertEquals(self::StringArg, $this->m_xRay->m_magicProperty);
+        self::assertFalse($this->m_xRay->isPublicProperty("magicProperty"));
+        self::assertFalse($this->m_xRay->isXRayedProperty("magicProperty"));
+        self::assertEquals("magic-property", $this->m_xRay->magicProperty);
+        $this->m_xRay->magicProperty = self::StringArg;
+        self::assertEquals(self::StringArg, $this->m_xRay->magicProperty);
     }
 
     /** Ensure we can set a magic property on a base class. */
@@ -251,7 +251,7 @@ class XRayTest extends TestCase
     /** Ensure public static properties defined on the class itself aren't accessible. */
     public function testPublicStaticProperty(): void
     {
-        self::expectException(LogicException::class);
+        $this->expectException(LogicException::class);
         self::assertFalse($this->m_xRay->isPublicProperty("publicStaticProperty"));
         self::assertFalse($this->m_xRay->isXRayedProperty("publicStaticProperty"));
         self::assertEquals("", $this->m_xRay->publicStaticProperty);
@@ -260,7 +260,7 @@ class XRayTest extends TestCase
     /** Ensure public static properties on a base class aren't accessible. */
     public function testBasePublicStaticProperty(): void
     {
-        self::expectException(LogicException::class);
+        $this->expectException(LogicException::class);
         self::assertFalse($this->m_xRay->isPublicProperty("basePublicStaticProperty"));
         self::assertFalse($this->m_xRay->isXRayedProperty("basePublicStaticProperty"));
         self::assertEquals("", $this->m_xRay->publicStaticProperty);
@@ -269,16 +269,16 @@ class XRayTest extends TestCase
     /** Ensure private static properties defined on the class itself aren't accessible. */
     public function testPrivateStaticProperty(): void
     {
-        self::expectException(LogicException::class);
-        self::assertFalse($this->m_xRay->isPublicProperty("m_privateStaticProperty"));
-        self::assertFalse($this->m_xRay->isXRayedProperty("m_privateStaticProperty"));
-        self::assertEquals("", $this->m_xRay->m_privateStaticProperty);
+        $this->expectException(LogicException::class);
+        self::assertFalse($this->m_xRay->isPublicProperty("privateStaticProperty"));
+        self::assertFalse($this->m_xRay->isXRayedProperty("privateStaticProperty"));
+        self::assertEquals("", $this->m_xRay->privateStaticProperty);
     }
 
     /** Ensure private static properties on a base class aren't accessible. */
     public function testBasePrivateStaticProperty(): void
     {
-        self::expectException(LogicException::class);
+        $this->expectException(LogicException::class);
         self::assertFalse($this->m_xRay->isPublicProperty("m_basePrivateStaticProperty"));
         self::assertFalse($this->m_xRay->isXRayedProperty("m_basePrivateStaticProperty"));
         self::assertEquals("", $this->m_xRay->m_basePrivateStaticProperty);
@@ -293,8 +293,8 @@ class XRayTest extends TestCase
 
         $xRay = new XRay($object);
         $className = $object::class;
-        self::expectException(LogicException::class);
-        self::expectExceptionMessage("Property \"nonExistentProperty\" does not exist on object of class \"{$className}\"");
+        $this->expectException(LogicException::class);
+        $this->expectExceptionMessage("Property \"nonExistentProperty\" does not exist on object of class \"{$className}\"");
         self::assertFalse($xRay->isPublicProperty("nonExistentProperty"));
         self::assertFalse($xRay->isXRayedProperty("nonExistentProperty"));
         $ignored = $xRay->nonExistentProperty;
@@ -309,8 +309,8 @@ class XRayTest extends TestCase
 
         $xRay = new XRay($object);
         $className = $object::class;
-        self::expectException(LogicException::class);
-        self::expectExceptionMessage("Property \"nonExistentProperty\" does not exist on object of class \"{$className}\"");
+        $this->expectException(LogicException::class);
+        $this->expectExceptionMessage("Property \"nonExistentProperty\" does not exist on object of class \"{$className}\"");
         self::assertFalse($xRay->isPublicProperty("nonExistentProperty"));
         self::assertFalse($xRay->isXRayedProperty("nonExistentProperty"));
         $xRay->nonExistentProperty = "should-not-get-this";
@@ -319,7 +319,7 @@ class XRayTest extends TestCase
     /** Ensure empty property names error. */
     public function testEmptyProperty(): void
     {
-        self::expectException(LogicException::class);
+        $this->expectException(LogicException::class);
         self::assertFalse($this->m_xRay->isPublicProperty(""));
         self::assertFalse($this->m_xRay->isXRayedProperty(""));
         self::assertEquals("", $this->m_xRay->{""});
@@ -452,7 +452,7 @@ class XRayTest extends TestCase
     /** Ensure we can't call a public static method defined on the class itself. */
     public function testPublicStaticMethod(): void
     {
-        self::expectException(BadMethodCallException::class);
+        $this->expectException(BadMethodCallException::class);
         self::assertFalse($this->m_xRay->isPublicMethod("publicStaticMethod"));
         self::assertFalse($this->m_xRay->isXRayedMethod("publicStaticMethod"));
         self::assertEquals("", $this->m_xRay->publicStaticMethod());
@@ -461,7 +461,7 @@ class XRayTest extends TestCase
     /** Ensure we can't call a public static method from a base class. */
     public function testBasePublicStaticMethod(): void
     {
-        self::expectException(BadMethodCallException::class);
+        $this->expectException(BadMethodCallException::class);
         self::assertFalse($this->m_xRay->isPublicMethod("basePublicStaticMethod"));
         self::assertFalse($this->m_xRay->isXRayedMethod("basePublicStaticMethod"));
         self::assertEquals("", $this->m_xRay->basePublicStaticMethod());
@@ -470,7 +470,7 @@ class XRayTest extends TestCase
     /** Ensure we can't call a public static method defined on the class itself with arguments. */
     public function testPublicStaticMethodWithArgs(): void
     {
-        self::expectException(BadMethodCallException::class);
+        $this->expectException(BadMethodCallException::class);
         self::assertFalse($this->m_xRay->isPublicMethod("publicStaticMethodWithArgs"));
         self::assertFalse($this->m_xRay->isXRayedMethod("publicStaticMethodWithArgs"));
         self::assertEquals("", $this->m_xRay->publicStaticMethodWithArgs(self::StringArg, self::IntArg));
@@ -479,7 +479,7 @@ class XRayTest extends TestCase
     /** Ensure we can't call a public static method with arguments from a base class. */
     public function testBasePublicStaticMethodWithArgs(): void
     {
-        self::expectException(BadMethodCallException::class);
+        $this->expectException(BadMethodCallException::class);
         self::assertFalse($this->m_xRay->isPublicMethod("basePublicStaticMethodWithArgs"));
         self::assertFalse($this->m_xRay->isXRayedMethod("basePublicStaticMethodWithArgs"));
         self::assertEquals("", $this->m_xRay->basePublicStaticMethodWithArgs(TestBaseClass::BaseStringArg, TestBaseClass::BaseIntArg));
@@ -488,7 +488,7 @@ class XRayTest extends TestCase
     /** Ensure we can't call a private static method defined on the class itself. */
     public function testPrivateStaticMethod(): void
     {
-        self::expectException(BadMethodCallException::class);
+        $this->expectException(BadMethodCallException::class);
         self::assertFalse($this->m_xRay->isPublicMethod("privateStaticMethod"));
         self::assertFalse($this->m_xRay->isXRayedMethod("privateStaticMethod"));
         self::assertEquals("", $this->m_xRay->privateStaticMethod());
@@ -497,7 +497,7 @@ class XRayTest extends TestCase
     /** Ensure we can't call a private static method from a base class. */
     public function testBasePrivateStaticMethod(): void
     {
-        self::expectException(BadMethodCallException::class);
+        $this->expectException(BadMethodCallException::class);
         self::assertFalse($this->m_xRay->isPublicMethod("basePrivateStaticMethod"));
         self::assertFalse($this->m_xRay->isXRayedMethod("basePrivateStaticMethod"));
         self::assertEquals("", $this->m_xRay->basePrivateStaticMethod());
@@ -506,7 +506,7 @@ class XRayTest extends TestCase
     /** Ensure we can't call a private static method defined on the class itself with arguments. */
     public function testPrivateStaticMethodWithArgs(): void
     {
-        self::expectException(BadMethodCallException::class);
+        $this->expectException(BadMethodCallException::class);
         self::assertFalse($this->m_xRay->isPublicMethod("privateStaticMethodWithArgs"));
         self::assertFalse($this->m_xRay->isXRayedMethod("privateStaticMethodWithArgs"));
         self::assertEquals("", $this->m_xRay->privateStaticMethodWithArgs());
@@ -515,16 +515,16 @@ class XRayTest extends TestCase
     /** Ensure we can't call a private static method with arguments from a base class. */
     public function testBasePrivateStaticMethodWithArgs(): void
     {
-        self::expectException(BadMethodCallException::class);
+        $this->expectException(BadMethodCallException::class);
         self::assertFalse($this->m_xRay->isPublicMethod("basePrivateStaticMethodWithArgs"));
         self::assertFalse($this->m_xRay->isXRayedMethod("basePrivateStaticMethodWithArgs"));
         self::assertEquals("", $this->m_xRay->basePrivateStaticMethodWithArgs());
     }
 
-    /** Ensure we can't call a maagic static method odefined n the class itself. */
+    /** Ensure we can't call a magic static method defined on the class itself. */
     public function testStaticMagicMethod(): void
     {
-        self::expectException(BadMethodCallException::class);
+        $this->expectException(BadMethodCallException::class);
         self::assertFalse($this->m_xRay->isPublicMethod("staticMagicMethod"));
         self::assertFalse($this->m_xRay->isXRayedMethod("staticMagicMethod"));
         self::assertEquals("", $this->m_xRay->staticMagicMethod());
@@ -533,7 +533,7 @@ class XRayTest extends TestCase
     /** Ensure we can't call a magic static method from a base class. */
     public function testBaseStaticMagicMethod(): void
     {
-        self::expectException(BadMethodCallException::class);
+        $this->expectException(BadMethodCallException::class);
         self::assertFalse($this->m_xRay->isPublicMethod("baseStaticMagicMethod"));
         self::assertFalse($this->m_xRay->isXRayedMethod("baseStaticMagicMethod"));
         self::assertEquals("", $this->m_xRay->baseStaticMagicMethod());
@@ -542,7 +542,7 @@ class XRayTest extends TestCase
     /** Ensure we can't call a magic static method defined on the class itself with arguments. */
     public function testStaticMagicMethodWithArgs(): void
     {
-        self::expectException(BadMethodCallException::class);
+        $this->expectException(BadMethodCallException::class);
         self::assertFalse($this->m_xRay->isPublicMethod("staticMagicMethodWithArgs"));
         self::assertFalse($this->m_xRay->isXRayedMethod("staticMagicMethodWithArgs"));
         self::assertEquals("", $this->m_xRay->staticMagicMethodWithArgs(self::StringArg, self::IntArg));
@@ -551,7 +551,7 @@ class XRayTest extends TestCase
     /** Ensure we can't call a magic static method with arguments from a base class. */
     public function testBaseStaticMagicMethodWithArgs(): void
     {
-        self::expectException(BadMethodCallException::class);
+        $this->expectException(BadMethodCallException::class);
         self::assertFalse($this->m_xRay->isPublicMethod("baseStaticMagicMethodWithArgs"));
         self::assertFalse($this->m_xRay->isXRayedMethod("baseStaticMagicMethodWithArgs"));
         self::assertEquals("", $this->m_xRay->baseStaticMagicMethodWithArgs(self::StringArg, self::IntArg));
@@ -566,14 +566,14 @@ class XRayTest extends TestCase
 
         $className = $object::class;
         $xRay = new XRay($object);
-        self::expectException(BadMethodCallException::class);
-        self::expectExceptionMessage("Method \"nonExistentMethod\" does not exist on object of class \"{$className}\"");
+        $this->expectException(BadMethodCallException::class);
+        $this->expectExceptionMessage("Method \"nonExistentMethod\" does not exist on object of class \"{$className}\"");
         self::assertFalse($xRay->isPublicMethod("nonExistentMethod"));
         self::assertFalse($xRay->isXRayedMethod("nonExistentMethod"));
         $xRay->nonExistentMethod();
     }
 
-    /** Ensure we get a BadMethodCall excception when invoke() throws a ReflectionException. */
+    /** Ensure we get a BadMethodCall exception when invoke() throws a ReflectionException. */
     public function testInvokeThrows(): void
     {
         $object = new class {
@@ -586,8 +586,8 @@ class XRayTest extends TestCase
         $className = $object::class;
         $xRay = new XRay($object);
 
-        self::expectException(BadMethodCallException::class);
-        self::expectExceptionMessage("Method \"mockInvokeThrowsReflectionException\" could not be invoked on instance of class \"{$className}\"");
+        $this->expectException(BadMethodCallException::class);
+        $this->expectExceptionMessage("Method \"mockInvokeThrowsReflectionException\" could not be invoked on instance of class \"{$className}\"");
         self::assertFalse($xRay->isPublicMethod("mockInvokeThrowsReflectionException"));
         self::assertTrue($xRay->isXRayedMethod("mockInvokeThrowsReflectionException"));
         $xRay->mockInvokeThrowsReflectionException();
@@ -596,9 +596,9 @@ class XRayTest extends TestCase
     /** Ensure we can't call methods with an empty name. */
     public function testEmptyMethod(): void
     {
-        self::expectException(BadMethodCallException::class);
+        $this->expectException(BadMethodCallException::class);
         self::assertFalse($this->m_xRay->isPublicMethod(""));
         self::assertFalse($this->m_xRay->isXRayedMethod(""));
-        self::assertEquals("", $this->m_xRay->{""}());
+        $this->m_xRay->{""}();
     }
 }
