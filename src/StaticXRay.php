@@ -100,7 +100,11 @@ class StaticXRay
             return;
         }
 
-        $reflector->setAccessible(true);
+        if (80100 > PHP_VERSION_ID) {
+            // as of PHP 8.1 this has no effect, and it's deprecated from 8.5
+            $reflector->setAccessible(true);
+        }
+
         $this->m_xRayedMethods[$method] = $reflector;
     }
 
@@ -131,7 +135,11 @@ class StaticXRay
             return;
         }
 
-        $reflector->setAccessible(true);
+        if (80100 > PHP_VERSION_ID) {
+            // as of PHP 8.1 this has no effect, and it's deprecated from 8.5
+            $reflector->setAccessible(true);
+        }
+
         $this->m_xRayedProperties[$property] = $reflector;
     }
 
