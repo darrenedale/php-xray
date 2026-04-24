@@ -23,7 +23,7 @@
     </coverage>
 
     <testsuites>
-        <testsuite name="All">
+        <testsuite name="full-suite">
             <directory>./tests/</directory>
         </testsuite>
     </testsuites>
