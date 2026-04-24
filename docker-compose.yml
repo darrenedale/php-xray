@@ -1,38 +1,80 @@
 name: xray-test
 
 services:
-  php80:
-    container_name: xray-test-80
-    image: darrenedale/equit:php-8.0-cli
+  xray-php-8.0:
+    container_name: xray-php-8.0
+    build:
+      dockerfile: "./Dockerfile"
+      args:
+        PHP_VERSION: "8.0"
     volumes:
       - ./:/xray
     working_dir: /xray
+    user: xray
     stdin_open: true
     tty: true
 
-  php81:
-    container_name: xray-test-81
-    image: darrenedale/equit:php-8.1-cli
+  xray-php-8.1:
+    container_name: xray-php-8.1
+    build:
+      dockerfile: "./Dockerfile"
+      args:
+        PHP_VERSION: "8.1"
     volumes:
       - ./:/xray
     working_dir: /xray
+    user: xray
     stdin_open: true
     tty: true
 
-  php82:
-    container_name: xray-test-82
-    image: darrenedale/equit:php-8.2-cli
+  xray-php-8.2:
+    container_name: xray-php-8.2
+    build:
+      dockerfile: "./Dockerfile"
+      args:
+        PHP_VERSION: "8.2"
     volumes:
       - ./:/xray
     working_dir: /xray
+    user: xray
     stdin_open: true
     tty: true
 
-  php83:
-    container_name: xray-test-83
-    image: darrenedale/equit:php-8.3-cli
+  xray-php-8.3:
+    container_name: xray-php-8.3
+    build:
+      dockerfile: "./Dockerfile"
+      args:
+        PHP_VERSION: "8.3"
     volumes:
       - ./:/xray
     working_dir: /xray
+    user: xray
+    stdin_open: true
+    tty: true
+
+  xray-php-8.4:
+    container_name: xray-php-8.4
+    build:
+      dockerfile: "./Dockerfile"
+      args:
+        PHP_VERSION: "8.4"
+    volumes:
+      - ./:/xray
+    working_dir: /xray
+    user: xray
+    stdin_open: true
+    tty: true
+
+  xray-php-8.5:
+    container_name: xray-php-8.5
+    build:
+      dockerfile: "./Dockerfile"
+      args:
+        PHP_VERSION: "8.5"
+    volumes:
+      - ./:/xray
+    working_dir: /xray
+    user: xray
     stdin_open: true
     tty: true
