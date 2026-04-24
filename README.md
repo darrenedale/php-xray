@@ -1,5 +1,7 @@
 # XRay
 
+[![Unit tests](https://github.com/darrenedale/php-xray/actions/workflows/unit-tests.yaml/badge.svg)](https://github.com/darrenedale/php-xray/actions/workflows/unit-tests.yaml)
+
 A PHP testing utility for accessing protected and private class members.
 
 Sometimes in tests you need to access protected or private class members. PHP provides a Reflection API for this. XRay

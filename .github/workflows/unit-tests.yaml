@@ -1,4 +1,4 @@
-name: PHP unit tests
+name: Unit tests
 
 on:
   push:
@@ -9,7 +9,7 @@ on:
 jobs:
   run-tests:
     name: Run unit tests
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
 
     strategy:
       matrix:
@@ -18,28 +18,25 @@ jobs:
           - "8.1"
           - "8.2"
           - "8.3"
+          - "8.4"
+          - "8.5"
 
     steps:
       - name: Checkout branch
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
-      - name: Install PHP ${{ matrix.php_version }} and extensions
+      - name: Start PHP ${{ matrix.php_version }} docker container
         run: |
-          sudo add-apt-repository -y ppa:ondrej/php
-          sudo apt-get update
-          sudo apt-get -y install php${{ matrix.php_version }}-cli php${{ matrix.php_version }}-uopz
+          docker login -u ${{ secrets.DOCKERUSERNAME }} -p ${{ secrets.DOCKERTOKEN }}
+          docker compose up -d xray-php-${{ matrix.php_version }}
+          docker exec -u root xray-php-${{ matrix.php_version }} rm -f /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
 
-      - name: Select PHP ${{ matrix.php_version }}
-        run: sudo update-alternatives --set php /usr/bin/php${{ matrix.php_version }}
-
-      - name: Configure PHP ${{ matrix.php_version }} for development environment
-        run: sudo cp /usr/lib/php/${{ matrix.php_version }}/php.ini-development /etc/php/${{ matrix.php_version }}/cli/php.ini
-
-      - name: Install composer dependencies
+      - name: Install dependencies
         run: |
-          rm composer.lock
           rm -rf vendor
-          composer install
+          chmod ugo+rw .
+          docker exec xray-php-${{ matrix.php_version }} composer update
 
       - name: Run unit tests
-        run: ./vendor/bin/phpunit --configuration ./phpunit.xml --do-not-cache-result ./tests
+        run: |
+          docker exec xray-php-${{ matrix.php_version }} ./vendor/bin/phpunit --configuration ./phpunit-php-${{ matrix.php_version }}.xml --testsuite 'full-suite' --do-not-cache-result ./tests
